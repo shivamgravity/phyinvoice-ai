@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface-app: 210 40% 98%;
+    --surface-panel: 0 0% 100%;
+    --border-panel: 214 31.8% 91.4%;
+    --content-main: 222 47.4% 11.2%;
+    --content-muted: 215 16.3% 46.9%;
+    --content-inverse: 0 0% 100%;
+    --btn-primary-bg: 243 75.4% 58.6%;
+    --btn-primary-hover: 245 57.9% 50.6%;
+    --btn-primary-text: 0 0% 100%;
+  }
+
+  :root.dark {
+    --surface-app: 229 84% 4.9%;
+    --surface-panel: 222 47.4% 11.2%;
+    --border-panel: 217 32.6% 17.5%;
+    --content-main: 210 40% 98%;
+    --content-muted: 215 20.2% 65.1%;
+    --content-inverse: 229 84% 4.9%;
+    --btn-primary-bg: 239 83.5% 66.7%;
+    --btn-primary-hover: 234 89.5% 73.9%;
+    --btn-primary-text: 0 0% 100%;
+  }
+
+  body {
+    background-color: hsl(var(--surface-app));
+    color: hsl(var(--content-main));
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom scrollbars */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.6);
+}
+
+/* Print styles for clean invoice export */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .invoice-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
