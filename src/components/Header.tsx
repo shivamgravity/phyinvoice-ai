@@ -1,5 +1,6 @@
 import React from 'react';
-import { DollarSign, FileText, Users, Moon, Sun, Shield, Sparkles, RefreshCw } from 'lucide-react';
+import { DollarSign, FileText, Users, Moon, Sun, Shield, Sparkles, RefreshCw, Cpu } from 'lucide-react';
+import { OllamaModelInfo } from '../services/gemmaService';
 
 interface HeaderProps {
   darkMode: boolean;
@@ -7,6 +8,12 @@ interface HeaderProps {
   onOpenInvoiceModal: () => void;
   onOpenClientsModal: () => void;
   onResetDemoData: () => void;
+  availableModels: OllamaModelInfo[];
+  selectedModel: string;
+  isOllamaConnected: boolean;
+  onSelectModel: (modelName: string) => void;
+  onRefreshModels: () => void;
+  isRefreshingModels?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,6 +22,12 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenInvoiceModal,
   onOpenClientsModal,
   onResetDemoData,
+  availableModels,
+  selectedModel,
+  isOllamaConnected,
+  onSelectModel,
+  onRefreshModels,
+  isRefreshingModels = false,
 }) => {
   return (
     <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 no-print transition-colors">
@@ -40,8 +53,51 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons & AI Model Selector */}
         <div className="flex items-center gap-2">
+          
+          {/* Local Ollama Model Picker */}
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 rounded-xl px-2.5 py-1.5 border border-slate-200 dark:border-slate-700/80 text-xs shadow-sm">
+            <div 
+              className="flex items-center gap-1 cursor-help" 
+              title={isOllamaConnected ? 'Local Ollama daemon connected' : 'Ollama daemon offline (using local heuristic enhancer)'}
+            >
+              <span className={`w-2 h-2 rounded-full ${isOllamaConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+              <Cpu className="w-3.5 h-3.5 text-indigo-500" />
+            </div>
+
+            {isOllamaConnected && availableModels.length > 0 ? (
+              <select
+                value={selectedModel}
+                onChange={(e) => onSelectModel(e.target.value)}
+                className="bg-transparent font-medium text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer max-w-[110px] sm:max-w-[150px] truncate text-xs"
+                title="Select local model for deliverable synthesis"
+              >
+                {availableModels.map((m) => (
+                  <option key={m.name} value={m.name} className="dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                    {m.name} {m.parameterSize ? `(${m.parameterSize})` : ''}
+                  </option>
+                ))}
+                <option value="offline-fallback" className="dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+                  Offline Enhancer (No AI)
+                </option>
+              </select>
+            ) : (
+              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+                {isOllamaConnected ? 'No models found' : 'Offline Enhancer'}
+              </span>
+            )}
+
+            <button
+              onClick={onRefreshModels}
+              disabled={isRefreshingModels}
+              className="p-1 rounded text-slate-400 hover:text-indigo-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              title="Rescan local Ollama daemon for models"
+            >
+              <RefreshCw className={`w-3 h-3 ${isRefreshingModels ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+
           <button
             onClick={onOpenClientsModal}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition"

@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { buildGemmaPrompt, offlineEnhanceDeliverable } from '../src/services/gemmaService';
+import { 
+  buildGemmaPrompt, 
+  offlineEnhanceDeliverable,
+  fetchInstalledOllamaModels,
+  synthesizeDeliverableWithGemma
+} from '../src/services/gemmaService';
 
 describe('Google Gemma 2 Prompt Builder & Deliverable Enhancer', () => {
   it('should construct structured prompt matching Gemma 2 turn tokens', () => {
@@ -32,4 +37,24 @@ describe('Google Gemma 2 Prompt Builder & Deliverable Enhancer', () => {
     expect(uiDeliverable).toContain('user interface');
     expect(uiDeliverable.endsWith('.')).toBe(true);
   });
+
+  it('should probe local Ollama daemon or gracefully report connection state', async () => {
+    const { connected, models } = await fetchInstalledOllamaModels();
+    expect(typeof connected).toBe('boolean');
+    expect(Array.isArray(models)).toBe(true);
+    if (connected && models.length > 0) {
+      expect(models[0].name).toBeDefined();
+    }
+  });
+
+  it('should immediately use deterministic fallback when offline-fallback mode is selected', async () => {
+    const result = await synthesizeDeliverableWithGemma(
+      'fixing dark mode border color',
+      'Dashboard UI',
+      { model: 'offline-fallback' }
+    );
+    expect(result.engine).toBe('deterministic-fallback');
+    expect(result.deliverable).toContain('user interface');
+  });
 });
+

@@ -10,6 +10,7 @@ interface SessionListProps {
   onSynthesizeDeliverable: (sessionId: string) => Promise<void>;
   onDeleteSession: (sessionId: string) => Promise<void>;
   synthesizingId?: string | null;
+  selectedModel?: string;
 }
 
 export const SessionList: React.FC<SessionListProps> = ({
@@ -19,6 +20,7 @@ export const SessionList: React.FC<SessionListProps> = ({
   onSynthesizeDeliverable,
   onDeleteSession,
   synthesizingId,
+  selectedModel,
 }) => {
   const [filterProjectId, setFilterProjectId] = useState<string>('all');
   const [filterBilled, setFilterBilled] = useState<string>('all');
@@ -156,7 +158,7 @@ export const SessionList: React.FC<SessionListProps> = ({
                   ) : (
                     <div className="text-xs text-slate-400 italic flex items-center gap-1.5">
                       <AlertCircle className="w-3.5 h-3.5" />
-                      <span>No polished deliverable yet. Click "Polish with Gemma 2" to synthesize.</span>
+                      <span>No polished deliverable yet. Click "Polish" to synthesize with local model.</span>
                     </div>
                   )}
                 </div>
@@ -173,15 +175,22 @@ export const SessionList: React.FC<SessionListProps> = ({
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => onSynthesizeDeliverable(session.id)}
-                      disabled={isSynthesizing}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 border border-indigo-200 dark:border-indigo-800 transition disabled:opacity-50"
-                      title="Rewrite raw note with Google Gemma 2"
-                    >
-                      <Sparkles className={`w-3.5 h-3.5 ${isSynthesizing ? 'animate-spin' : ''}`} />
-                      <span>{isSynthesizing ? 'Polishing...' : 'Polish (Gemma 2)'}</span>
-                    </button>
+                    {(() => {
+                      const modelLabel = selectedModel && selectedModel !== 'offline-fallback'
+                        ? selectedModel.split(':')[0]
+                        : 'AI';
+                      return (
+                        <button
+                          onClick={() => onSynthesizeDeliverable(session.id)}
+                          disabled={isSynthesizing}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 border border-indigo-200 dark:border-indigo-800 transition disabled:opacity-50"
+                          title={`Rewrite raw note with ${selectedModel || 'local model'}`}
+                        >
+                          <Sparkles className={`w-3.5 h-3.5 ${isSynthesizing ? 'animate-spin' : ''}`} />
+                          <span>{isSynthesizing ? 'Polishing...' : `Polish (${modelLabel})`}</span>
+                        </button>
+                      );
+                    })()}
 
                     <button
                       onClick={() => onDeleteSession(session.id)}

@@ -17,7 +17,11 @@ import { clientRepository } from './data/clientRepository';
 import { invoiceRepository } from './data/invoiceRepository';
 import { WorkSession, Project, Client, Invoice, ScopeRiskAssessment } from './data/types';
 import { calculateFinancialMetrics, GlobalFinancialMetrics } from './services/billingEngine';
-import { synthesizeDeliverableWithGemma } from './services/gemmaService';
+import { 
+  synthesizeDeliverableWithGemma, 
+  fetchInstalledOllamaModels, 
+  OllamaModelInfo 
+} from './services/gemmaService';
 import { runTabPFNPortfolioAudit } from './services/tabpfnService';
 
 export const App: React.FC = () => {
@@ -30,6 +34,12 @@ export const App: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [riskAssessments, setRiskAssessments] = useState<ScopeRiskAssessment[]>([]);
+
+  // Local Ollama Models state
+  const [availableModels, setAvailableModels] = useState<OllamaModelInfo[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>('gemma3:1b');
+  const [isOllamaConnected, setIsOllamaConnected] = useState<boolean>(false);
+  const [isRefreshingModels, setIsRefreshingModels] = useState<boolean>(false);
 
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [isClientsModalOpen, setIsClientsModalOpen] = useState(false);
@@ -45,10 +55,49 @@ export const App: React.FC = () => {
     }
   }, [darkMode]);
 
+  // Load installed models from local Ollama daemon
+  const loadOllamaModels = async () => {
+    setIsRefreshingModels(true);
+    try {
+      const { connected, models } = await fetchInstalledOllamaModels();
+      setIsOllamaConnected(connected);
+      setAvailableModels(models);
+
+      const saved = localStorage.getItem('phyinvoice_selected_model');
+      if (connected && models.length > 0) {
+        if (saved && (models.some(m => m.name === saved) || saved === 'offline-fallback')) {
+          setSelectedModel(saved);
+        } else {
+          // Auto-select preferred Gemma model if available, else first model
+          const gemma = models.find(m => m.name.toLowerCase().includes('gemma'));
+          const chosen = gemma ? gemma.name : models[0].name;
+          setSelectedModel(chosen);
+          localStorage.setItem('phyinvoice_selected_model', chosen);
+        }
+      } else {
+        if (saved === 'offline-fallback') {
+          setSelectedModel('offline-fallback');
+        } else {
+          setSelectedModel(connected && models.length > 0 ? models[0].name : 'offline-fallback');
+        }
+      }
+    } finally {
+      setIsRefreshingModels(false);
+    }
+  };
+
+  const handleSelectModel = (modelName: string) => {
+    setSelectedModel(modelName);
+    localStorage.setItem('phyinvoice_selected_model', modelName);
+  };
+
   // Initial load & seed
   useEffect(() => {
     async function loadData() {
-      await seedInitialDataIfEmpty();
+      await Promise.all([
+        seedInitialDataIfEmpty(),
+        loadOllamaModels(),
+      ]);
       await refreshAllData();
     }
     loadData();
@@ -100,7 +149,11 @@ export const App: React.FC = () => {
     setSynthesizingId(sessionId);
 
     try {
-      const { deliverable } = await synthesizeDeliverableWithGemma(session.description, project?.name);
+      const { deliverable } = await synthesizeDeliverableWithGemma(
+        session.description, 
+        project?.name,
+        { model: selectedModel }
+      );
       await sessionRepository.updateDeliverable(sessionId, deliverable);
       await refreshAllData();
     } finally {
@@ -148,6 +201,12 @@ export const App: React.FC = () => {
         onOpenInvoiceModal={() => setIsInvoiceModalOpen(true)}
         onOpenClientsModal={() => setIsClientsModalOpen(true)}
         onResetDemoData={handleResetDemoData}
+        availableModels={availableModels}
+        selectedModel={selectedModel}
+        isOllamaConnected={isOllamaConnected}
+        onSelectModel={handleSelectModel}
+        onRefreshModels={loadOllamaModels}
+        isRefreshingModels={isRefreshingModels}
       />
 
       {/* Main Content Dashboard */}
@@ -198,9 +257,11 @@ export const App: React.FC = () => {
           onSynthesizeDeliverable={handleSynthesizeDeliverable}
           onDeleteSession={handleDeleteSession}
           synthesizingId={synthesizingId}
+          selectedModel={selectedModel}
         />
 
       </main>
+
 
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400 no-print">

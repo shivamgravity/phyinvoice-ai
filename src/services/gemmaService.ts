@@ -5,14 +5,55 @@
  * professional, dispute-proof client deliverables suitable for formal invoices.
  */
 
+export interface OllamaModelInfo {
+  name: string;
+  size: number;
+  family?: string;
+  parameterSize?: string;
+}
+
 export interface GemmaOptions {
   ollamaUrl?: string;
   model?: string;
   temperature?: number;
 }
 
-const DEFAULT_OLLAMA_URL = 'http://localhost:11434';
-const DEFAULT_MODEL = 'gemma2:2b';
+export const DEFAULT_OLLAMA_URL = 'http://localhost:11434';
+export const DEFAULT_MODEL = 'gemma3:1b';
+
+/**
+ * Probes the local Ollama daemon for installed models (/api/tags)
+ */
+export async function fetchInstalledOllamaModels(
+  ollamaUrl: string = DEFAULT_OLLAMA_URL
+): Promise<{ connected: boolean; models: OllamaModelInfo[] }> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+    const res = await fetch(`${ollamaUrl}/api/tags`, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      return { connected: false, models: [] };
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data.models)) {
+      const models: OllamaModelInfo[] = data.models.map((m: any) => ({
+        name: m.name,
+        size: m.size || 0,
+        family: m.details?.family || '',
+        parameterSize: m.details?.parameter_size || '',
+      }));
+      return { connected: true, models };
+    }
+  } catch (_err) {
+    // Ollama daemon not reachable
+  }
+
+  return { connected: false, models: [] };
+}
 
 /**
  * Builds the structured prompt for Gemma 2
@@ -84,13 +125,21 @@ export function offlineEnhanceDeliverable(rawNote: string, projectContext?: stri
 }
 
 /**
- * Synthesizes a client deliverable using local Gemma 2 via Ollama, falling back to local heuristic.
+ * Synthesizes a client deliverable using local Gemma/Ollama model, falling back to local heuristic.
  */
 export async function synthesizeDeliverableWithGemma(
   rawNote: string,
   projectContext?: string,
   options: GemmaOptions = {}
-): Promise<{ deliverable: string; engine: 'gemma2-local' | 'deterministic-fallback' }> {
+): Promise<{ deliverable: string; engine: string }> {
+  // If user explicitly chose offline fallback mode, bypass network probe immediately
+  if (options.model === 'offline-fallback') {
+    return {
+      deliverable: offlineEnhanceDeliverable(rawNote, projectContext),
+      engine: 'deterministic-fallback',
+    };
+  }
+
   const ollamaUrl = options.ollamaUrl || DEFAULT_OLLAMA_URL;
   const model = options.model || DEFAULT_MODEL;
 
@@ -98,7 +147,7 @@ export async function synthesizeDeliverableWithGemma(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout for local models
 
     const response = await fetch(`${ollamaUrl}/api/generate`, {
       method: 'POST',
@@ -121,9 +170,9 @@ export async function synthesizeDeliverableWithGemma(
       const data = await response.json();
       const output = (data.response || '').trim();
       if (output.length > 10) {
-        // Strip any residual quotes or markdown
-        const cleanedOutput = output.replace(/^["'`]+|["'`]+$/g, '').trim();
-        return { deliverable: cleanedOutput, engine: 'gemma2-local' };
+        // Strip residual straight and smart/curly quotes or markdown
+        const cleanedOutput = output.replace(/^["'`“”«»]+|["'`“”«»]+$/g, '').trim();
+        return { deliverable: cleanedOutput, engine: `ollama:${model}` };
       }
     }
   } catch (_err) {
@@ -136,3 +185,4 @@ export async function synthesizeDeliverableWithGemma(
     engine: 'deterministic-fallback',
   };
 }
+
