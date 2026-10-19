@@ -47,17 +47,17 @@ export const Header: React.FC<HeaderProps> = ({
                 <Shield className="w-2.5 h-2.5" /> Local-First AI
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="hidden md:block text-xs text-slate-500 dark:text-slate-400">
               Freelance Billing, Scope-Creep Defense & Google Gemma Deliverables
             </p>
           </div>
         </div>
 
         {/* Action Buttons & AI Model Selector */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           
           {/* Local Ollama Model Picker */}
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 rounded-xl px-2.5 py-1.5 border border-slate-200 dark:border-slate-700/80 text-xs shadow-sm">
+          <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 dark:bg-slate-800/90 rounded-xl px-2 sm:px-2.5 py-1.5 border border-slate-200 dark:border-slate-700/80 text-xs shadow-sm">
             <div 
               className="flex items-center gap-1 cursor-help" 
               title={isOllamaConnected ? 'Local Ollama daemon connected' : 'Ollama daemon offline (using local heuristic enhancer)'}
@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
               <select
                 value={selectedModel}
                 onChange={(e) => onSelectModel(e.target.value)}
-                className="bg-transparent font-medium text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer max-w-[110px] sm:max-w-[150px] truncate text-xs"
+                className="bg-transparent font-medium text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer max-w-[80px] sm:max-w-[150px] truncate text-xs"
                 title="Select local model for deliverable synthesis"
               >
                 {availableModels.map((m) => (
@@ -83,8 +83,8 @@ export const Header: React.FC<HeaderProps> = ({
                 </option>
               </select>
             ) : (
-              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
-                {isOllamaConnected ? 'No models found' : 'Offline Enhancer'}
+              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400 hidden xs:inline">
+                {isOllamaConnected ? 'No models' : 'Offline'}
               </span>
             )}
 
@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onOpenClientsModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition"
             title="Manage Clients & Hourly Rates"
           >
             <Users className="w-4 h-4 text-slate-500" />
@@ -109,11 +109,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onOpenInvoiceModal}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30 transition"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30 transition"
             title="Create New Invoice"
           >
             <FileText className="w-4 h-4" />
-            <span>Create Invoice</span>
+            <span className="hidden sm:inline">Create Invoice</span>
           </button>
 
           <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-1" />

@@ -210,7 +210,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Dashboard */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-6">
+      <main className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 w-full flex-1 space-y-4 sm:space-y-6">
         
         {/* Banner / Introduction */}
         <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-transparent border border-indigo-200/50 dark:border-indigo-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">

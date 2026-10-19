@@ -63,16 +63,16 @@ export const SessionList: React.FC<SessionListProps> = ({
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 text-xs text-slate-500">
             <Filter className="w-3.5 h-3.5" />
-            <span>Filter:</span>
+            <span className="hidden xs:inline">Filter:</span>
           </div>
 
           <select
             value={filterProjectId}
             onChange={(e) => setFilterProjectId(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
             <option value="all">All Projects</option>
             {projects.map(p => (
@@ -83,7 +83,7 @@ export const SessionList: React.FC<SessionListProps> = ({
           <select
             value={filterBilled}
             onChange={(e) => setFilterBilled(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
             <option value="all">All Status</option>
             <option value="unbilled">Unbilled</option>
@@ -164,8 +164,8 @@ export const SessionList: React.FC<SessionListProps> = ({
                 </div>
 
                 {/* Right: Hours, Amount, Actions */}
-                <div className="flex items-center md:items-end flex-row md:flex-col justify-between shrink-0 gap-2">
-                  <div className="text-right">
+                <div className="flex items-center justify-between w-full md:w-auto md:flex-col md:items-end shrink-0 gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800/80">
+                  <div className="text-left md:text-right">
                     <div className="text-sm font-bold text-slate-900 dark:text-white">
                       ${lineAmount}
                     </div>

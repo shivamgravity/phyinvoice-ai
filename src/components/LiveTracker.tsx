@@ -134,7 +134,7 @@ export const LiveTracker: React.FC<LiveTrackerProps> = ({
         </div>
 
         {/* Billable Toggle & Rounding Rule Info */}
-        <div className="flex items-center gap-3 px-2">
+        <div className="flex items-center justify-between sm:justify-start gap-3 px-1 sm:px-2 w-full sm:w-auto">
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -153,8 +153,8 @@ export const LiveTracker: React.FC<LiveTrackerProps> = ({
         </div>
 
         {/* Live Timer Display & Start/Stop Controls */}
-        <div className="flex items-center gap-3">
-          <div className={`font-mono text-lg font-bold px-3.5 py-2 rounded-xl flex items-center gap-2 transition ${
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <div className={`flex-1 sm:flex-initial justify-center font-mono text-base sm:text-lg font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-2 transition ${
             isTracking
               ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 animate-pulse'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
@@ -166,7 +166,7 @@ export const LiveTracker: React.FC<LiveTrackerProps> = ({
           {isTracking ? (
             <button
               onClick={handleStop}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-red-600 hover:bg-red-500 shadow-md shadow-red-600/30 transition shrink-0"
+              className="flex-1 sm:flex-initial justify-center flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-red-600 hover:bg-red-500 shadow-md shadow-red-600/30 transition shrink-0"
             >
               <Square className="w-4 h-4 fill-white" />
               <span>Stop & Save</span>
@@ -174,7 +174,7 @@ export const LiveTracker: React.FC<LiveTrackerProps> = ({
           ) : (
             <button
               onClick={handleStart}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 transition shrink-0"
+              className="flex-1 sm:flex-initial justify-center flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 transition shrink-0"
             >
               <Play className="w-4 h-4 fill-white" />
               <span>Start Timer</span>
@@ -186,10 +186,10 @@ export const LiveTracker: React.FC<LiveTrackerProps> = ({
 
       {/* Real-time rounding and earnings preview when tracking */}
       {isTracking && (
-        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-          <span className="flex items-center gap-1">
+        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+          <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block" />
-            Active Session on <strong>{selectedProject?.name}</strong>
+            Active: <strong>{selectedProject?.name}</strong>
           </span>
           <span className="font-medium">
             Rounded to <strong className="text-slate-900 dark:text-white">{billableHours}h</strong> ({roundingRule}) = <strong className="text-emerald-600 dark:text-emerald-400">${projectedEarnings}</strong>
