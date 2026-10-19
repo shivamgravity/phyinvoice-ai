@@ -116,17 +116,15 @@ export const App: React.FC = () => {
     setClients(allClients);
     setInvoices(allInvoices);
 
-    // Run TabPFN audit (reads optional VITE_TABPFN_API_KEY or localStorage key if configured)
-    const tabpfnKey = (import.meta as any).env?.VITE_TABPFN_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem('tabpfn_api_key') : null) || undefined;
-    const assessments = await runTabPFNPortfolioAudit(allProjects, allClients, allSessions, tabpfnKey);
+    // Run TabPFN audit
+    const assessments = await runTabPFNPortfolioAudit(allProjects, allClients, allSessions);
     setRiskAssessments(assessments);
   };
 
   const handleRefreshTabPFN = async () => {
     setIsEvaluatingTabPFN(true);
     try {
-      const tabpfnKey = (import.meta as any).env?.VITE_TABPFN_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem('tabpfn_api_key') : null) || undefined;
-      const assessments = await runTabPFNPortfolioAudit(projects, clients, sessions, tabpfnKey);
+      const assessments = await runTabPFNPortfolioAudit(projects, clients, sessions);
       setRiskAssessments(assessments);
     } finally {
       setIsEvaluatingTabPFN(false);
