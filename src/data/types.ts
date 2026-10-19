@@ -35,7 +35,7 @@ export interface Project {
 export interface WorkSession {
   id: string;
   description: string;
-  clientDeliverable?: string; // Synthesized by Gemma 2
+  clientDeliverable?: string; // Synthesized by Google Gemma
   startTime: number;
   endTime: number | null;
   duration: number; // in seconds

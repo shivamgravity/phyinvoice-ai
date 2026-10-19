@@ -219,7 +219,7 @@ export const App: React.FC = () => {
               Autonomous Freelance Revenue Defense
             </h1>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-              Zero cloud API leakage. Google Gemma 2 synthesizes deliverable statements, while Prior Labs TabPFN-3.5 forecasts scope creep and unbilled hour loss.
+              Zero cloud API leakage. Google Gemma (any locally available Gemma model) synthesizes deliverable statements, while Prior Labs TabPFN-3.5 forecasts scope creep and unbilled hour loss.
             </p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto text-[11px] font-semibold text-slate-500 dark:text-slate-400">

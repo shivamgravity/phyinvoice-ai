@@ -2,7 +2,7 @@
 
 > **Local-First Freelance Billing, Scope-Creep Defense & Invoice Engine**  
 > Built for the **Hacktoberfest Open-Source AI Challenge: Week 2 (Side Hustle)**  
-> Powered by **Google Gemma 2**, **Prior Labs TabPFN-3.5**, and **Local Transformers**.
+> Powered by **Google Gemma (Gemma, Gemma 2, Gemma 3)**, **Prior Labs TabPFN-3.5**, and **Local Transformers**.
 
 ---
 
@@ -23,7 +23,7 @@ Every week, millions of freelancers, contractors, and side-hustlers lose **15% t
 
 **PhyInvoice AI** is an autonomous, privacy-preserving billing copilot that combines **open-weight language intelligence** with **zero-shot tabular forecasting**:
 
-* 🧠 **Google Gemma 2 (`gemma2:2b` / `gemma2:9b`)**: Automatically transforms raw developer notes into professional, legally defensible client deliverable statements (e.g. *"Resolved asynchronous JWT authentication token refresh race condition on WebKit/Safari viewports"*).
+* 🧠 **Google Gemma (`gemma:2b`, `gemma2:9b`, `gemma3:1b`, etc.)**: Dynamically auto-detects any local Gemma model to transform raw developer notes into professional, legally defensible client deliverable statements (e.g. *"Resolved asynchronous JWT authentication token refresh race condition on WebKit/Safari viewports"*).
 * 📊 **Prior Labs TabPFN-3.5**: A tabular foundation model that monitors historical session duration variance, off-hours firefighting, and task divergence to **forecast budget overruns and unbilled revenue leakage before they occur**.
 * ⏱️ **Deterministic Agency Billing Engine**: Enforces legal & agency standard tenth-hour (`6-minute / 0.1h`) and quarter-hour (`15-minute / 0.25h`) rounding increments, calculating real Effective Hourly Rates (EHR).
 * 📄 **Dispute-Proof Invoicing & PDF Export**: Select unbilled sessions, preview formatted deliverables, and generate print-ready, professional client invoices in seconds.
@@ -37,7 +37,7 @@ Every week, millions of freelancers, contractors, and side-hustlers lose **15% t
 flowchart LR
     subgraph LocalApp["PhyInvoice AI (Browser / Desktop Client)"]
         A["Live Session Logger<br/>'debugging jwt auth'"] --> B["IndexedDB Local Storage"]
-        B --> C["Google Gemma 2<br/>(Local Ollama / Enhancer)"]
+        B --> C["Google Gemma Model<br/>(Local Ollama / Enhancer)"]
         B --> D["Prior Labs TabPFN-3.5<br/>(Tabular Scope Radar)"]
         B --> E["Deterministic Billing Engine<br/>(15-min / 6-min Rounding)"]
         
@@ -93,7 +93,7 @@ npm run build
 ## 🏆 Hackathon Prize Categories
 
 * **Overall Winner**: Meets all criteria for the "Side Hustle" prompt with verified commercial viability.
-* **Featured Category: Best Use of Gemma ($200)**: Leverages Google's Gemma 2 open-weight model for prompt-engineered client deliverable synthesis.
+* **Featured Category: Best Use of Gemma ($200)**: Leverages Google's Gemma family of open-weight models (with local dynamic discovery) for prompt-engineered client deliverable synthesis.
 * **Featured Category: Best Use of TabPFN ($200)**: Integrates Prior Labs' TabPFN-3.5 tabular foundation model to forecast budget overruns from historical session variance.
 * **Best Use of Sentry Agent Tracing / Render ($100)**: Built with reproducible automated test pipelines and deployable on modern runtimes.
 

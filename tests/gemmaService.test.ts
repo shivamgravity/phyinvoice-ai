@@ -6,8 +6,8 @@ import {
   synthesizeDeliverableWithGemma
 } from '../src/services/gemmaService';
 
-describe('Google Gemma 2 Prompt Builder & Deliverable Enhancer', () => {
-  it('should construct structured prompt matching Gemma 2 turn tokens', () => {
+describe('Google Gemma Prompt Builder & Deliverable Enhancer', () => {
+  it('should construct structured prompt matching Gemma turn tokens', () => {
     const prompt = buildGemmaPrompt('fixing jwt token bug', 'Customer Portal');
     expect(prompt).toContain('<start_of_turn>user');
     expect(prompt).toContain('<end_of_turn>');

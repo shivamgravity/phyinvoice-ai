@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Freelance Billing, Scope-Creep Defense & Gemma 2 Deliverables
+              Freelance Billing, Scope-Creep Defense & Google Gemma Deliverables
             </p>
           </div>
         </div>

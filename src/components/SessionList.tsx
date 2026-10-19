@@ -58,7 +58,7 @@ export const SessionList: React.FC<SessionListProps> = ({
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Raw developer logs transformed into client-ready deliverable line items via Google Gemma 2.
+            Raw developer logs transformed into client-ready deliverable line items via Google Gemma.
           </p>
         </div>
 

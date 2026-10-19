@@ -1,6 +1,7 @@
 /**
- * Google Gemma 2 Open-Weight LLM Service for Deliverable Synthesis
+ * Google Gemma Open-Weight LLM Service for Deliverable Synthesis
  * 
+ * Supports any locally installed Google Gemma model variant (Gemma, Gemma 2, Gemma 3, etc.)
  * Transforms informal, raw developer/freelancer session notes into polished, 
  * professional, dispute-proof client deliverables suitable for formal invoices.
  */
@@ -56,7 +57,7 @@ export async function fetchInstalledOllamaModels(
 }
 
 /**
- * Builds the structured prompt for Gemma 2
+ * Builds the structured prompt for Google Gemma models
  */
 export function buildGemmaPrompt(rawNote: string, projectContext?: string): string {
   const contextLine = projectContext ? `Project context: "${projectContext}".` : '';
