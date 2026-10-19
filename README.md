@@ -59,7 +59,7 @@ flowchart LR
 
 ### 1. Installation
 ```bash
-git clone https://github.com/your-username/phyinvoice-ai.git
+git clone https://github.com/shivamgravity/phyinvoice-ai.git
 cd phyinvoice-ai
 npm install
 ```
